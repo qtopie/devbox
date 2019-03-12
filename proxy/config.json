@@ -1,0 +1,6 @@
+{
+	"local_port": 1080,
+	"server_password": [
+		["server:53524","pass","method"]
+	]
+}

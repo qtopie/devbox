@@ -1,0 +1,12 @@
+[Unit]
+Description=Go Shadowsocks local daemon
+After=network.target network-online.target multi-user.target
+
+[Service]
+ExecStart=/usr/bin/shadowsocks-local -c /etc/shadowsocks/config.json
+PIDFile=/var/run/shadowsocks.pid
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
