@@ -27,7 +27,29 @@ Shift Alt X + T / F11
 Ctrl + O
 ```
 
+* Create new file
+
+```
+Ctrl + N
+```
+
 * Refactor
 ```
 Shift-Alt+R
 ```
+
+* Search
+
+```
+Ctrl + F
+```
+
+* Navgiation
+
+Go to line: `Ctrl + L`
+
+Go to last edited: `Ctrl + Q`
+
+Go to last/next visted: `Alt + <-/->`
+
+Max/Min window: `Ctrl + M`
