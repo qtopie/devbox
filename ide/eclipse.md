@@ -53,3 +53,9 @@ Go to last edited: `Ctrl + Q`
 Go to last/next visted: `Alt + <-/->`
 
 Max/Min window: `Ctrl + M`
+
+* Set author name with git user name 
+
+Windows > Preferences > Java > Code Style > Code Templates > Comments -> Types , Edit
+${author:git_config(user.name)}
+
