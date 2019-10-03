@@ -103,3 +103,30 @@ eclipse {
     }
 }
 ```
+
+## Setup in Ubuntu 18.04
+
+Snap store version has better integration with Ubuntu currently.
+
+```bash
+sudo snap install eclipse --classic
+```
+
+* Workaround for customize eclipse
+
+Use locate `eclipse.desktop`, found
+
+```
+/snap/eclipse/40/eclipse.desktop
+/snap/eclipse/40/meta/gui/eclipse.desktop
+/var/lib/snapd/desktop/applications/eclipse_eclipse.desktop
+```
+
+Edit `/var/lib/snapd/desktop/applications/eclipse_eclipse.desktop` and change exec to 
+```
+Exec=env BAMF_DESKTOP_FILE_HINT=/var/lib/snapd/desktop/applications/eclipse_eclipse.desktop /snap/bin/eclipse --launcher.ini $HOME/snap/eclipse/current/eclipse.ini -Dorg.eclipse.equinox.p2.reconciler.dropins.directory=$HOME/snap/eclipse/current/dropins %U
+```
+
+Then put dropins and eclipse.init into $HOME/snap/eclipse/current/
+
+* https://wiki.eclipse.org/Equinox_p2_tests#Dropins_Reconciler
