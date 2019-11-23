@@ -70,9 +70,10 @@ Workaround
 
 ```gradle
 eclipse {
+    project.natures 'org.eclipse.buildship.core.gradleprojectnature'
     classpath {
-//        downloadJavadoc = true
-  //      downloadSources = true
+        downloadJavadoc = true
+        downloadSources = true
 
         defaultOutputDir = file('build/default')
         file.whenMerged {
@@ -83,20 +84,18 @@ eclipse {
                         def outputPath = source.output
                         switch(source.path) {
                             case 'src/main/java':
-                              outputPath = 'build/classes/java/main'
+                              source.output = 'build/classes/java/main'
                               break
                             case 'src/main/resources':
-                              outputPath = 'build/resources/main'
+                              source.output = 'build/resources/main'
                               break
                             case 'src/test/java':
-                              outputPath = 'build/classes/java/test'
+                              source.output = 'build/classes/java/test'
                               break
                             case 'src/test/resources':
-                              outputPath = 'build/resources/test'
+                              source.output = 'build/resources/test'
                               break
                         }
-
-                        source.output = outputPath
                     }
             }
         }
