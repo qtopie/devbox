@@ -1,26 +1,27 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" vim plug
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin('~/.vim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'artificerpi/autoread.vim'
-Plugin 'google/vim-maktaba'
-Plugin 'google/vim-codefmt'
-Plugin 'google/vim-glaive'
-Plugin 'chase/vim-ansible-yaml'
-Plugin 'fatih/vim-go'
-Plugin 'suan/vim-instant-markdown'
-Plugin 'scrooloose/nerdtree'
-Plugin 'maksimr/vim-jsbeautify'
+"Plug 'govim/govim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'artificerpi/autoread.vim'
+Plug 'google/vim-maktaba'
+Plug 'google/vim-codefmt'
+Plug 'google/vim-glaive'
+Plug 'chase/vim-ansible-yaml'
+Plug 'scrooloose/nerdtree'
+Plug 'maksimr/vim-jsbeautify'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
+" Initialize plugin system
+call plug#end()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" markdown
+autocmd FileType markdown nmap <F5> :MarkdownPreview<CR>
+
 call glaive#Install()
 filetype plugin indent on    " required
 Glaive codefmt plugin[mappings]
@@ -48,10 +49,6 @@ augroup autoformat_settings
   " Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
 
-" markdown
-let g:instant_markdown_autostart = 0
-let g:instant_markdown_allow_unsafe_content = 1
-autocmd FileType markdown nmap <F5> :InstantMarkdownPreview<CR>
 
 " file tree
 map <C-n> :NERDTreeToggle<CR>
@@ -81,6 +78,9 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 "vmap  <expr>  <UP>      DVB_Drag('up')
 "let g:DVB_TrimWS = 1
 
+" go
+"let g:go_fmt_command = "goimports"
+
 " python
 filetype on
 autocmd FileType python nnoremap <buffer> <F5> :exec '!clear; python3' shellescape(@%, 1)<cr>
@@ -100,3 +100,10 @@ set list
 " make the 80th column stand out
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%80v', 100)
+
+" delete
+set backspace=indent,eol,start
+color desert
+set cursorline
+hi CursorLine term=bold cterm=bold guibg=Grey40
+
