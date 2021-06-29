@@ -70,36 +70,28 @@ Workaround
 
 ```gradle
 eclipse {
-    project.natures 'org.eclipse.buildship.core.gradleprojectnature'
-    classpath {
-        downloadJavadoc = true
-        downloadSources = true
+  project.natures 'org.eclipse.buildship.core.gradleprojectnature'
+  classpath {
+    downloadJavadoc = true
+    downloadSources = true
 
-        defaultOutputDir = file('build/default')
-        file.whenMerged {
-            entries.each {
-                source ->
-                    // This seems kludgy.  If the second test is omitted, it fails processing a 'Project Dependency' entry
-                    if (source.kind == 'src' && source.hasProperty('output')) {
-                        def outputPath = source.output
-                        switch(source.path) {
-                            case 'src/main/java':
-                              source.output = 'build/classes/java/main'
-                              break
-                            case 'src/main/resources':
-                              source.output = 'build/resources/main'
-                              break
-                            case 'src/test/java':
-                              source.output = 'build/classes/java/test'
-                              break
-                            case 'src/test/resources':
-                              source.output = 'build/resources/test'
-                              break
-                        }
-                    }
-            }
+    // Just a workaround, but this issue should be fixed in gradle :<
+    defaultOutputDir = file('build/default')
+    def map = [
+      'src/main/java' : 'build/classes/java/main',
+      'src/main/resources': 'build/resources/main',
+      'src/test/java': 'build/classes/java/test',
+      'src/test/resources': 'build/resources/test'
+    ]
+
+    file.whenMerged {
+      entries.each { source ->
+        if (source.kind == 'src' && source.hasProperty('output')) {
+          source.output = map.get(source.path) ?: defaultOutputDir
         }
+      }
     }
+  }
 }
 ```
 
