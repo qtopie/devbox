@@ -2,10 +2,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
 
-Plug 'artificerpi/autoread.vim'
 Plug 'chase/vim-ansible-yaml'
 Plug 'scrooloose/nerdtree'
-Plug 'maksimr/vim-jsbeautify'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -20,12 +18,12 @@ filetype plugin indent on    " required
 map <C-n> :NERDTreeToggle<CR>
 
 " mappings to move lines
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
+nnoremap <silent> <A-j> :m .+1<CR>==
+nnoremap <silent> <A-k> :m .-2<CR>==
+inoremap <silent> <A-j> <Esc>:m .+1<CR>==gi
+inoremap <silent> <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <silent> <A-j> :m '>+1<CR>gv=gv
+vnoremap <silent> <A-k> :m '<-2<CR>gv=gv
 
 " block dragging from Damian Conway
 "runtime plugin/dragvisuals.vim
@@ -35,21 +33,28 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 "vmap  <expr>  <UP>      DVB_Drag('up')
 "let g:DVB_TrimWS = 1
 
-" python
 filetype on
-autocmd FileType python nnoremap <buffer> <F5> :exec '!clear; python3' shellescape(@%, 1)<cr>
 
 " yaml
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=0# indentkeys-=<:>
 
-" my configuration for basic editing
+" configuration for basic editing
 set nu
-set expandtab tabstop=4 shiftwidth=4
+set expandtab tabstop=2 shiftwidth=2
 syntax on
 
+" fix alt not working on gnome
+let c='a'
+while c <= 'z'
+  exec "set <A-".c.">=\e".c
+  exec "imap \e".c." <A-".c.">"
+  let c = nr2char(1+char2nr(c))
+endw
+set timeout ttimeoutlen=50
+
 " show whitespace
-set listchars=tab:>~,nbsp:_,trail:.
-set list
+"set listchars=tab:>~,nbsp:_,trail:.
+"set list
 
 " make the 80th column stand out
 highlight ColorColumn ctermbg=magenta
