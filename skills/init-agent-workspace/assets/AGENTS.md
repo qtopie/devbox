@@ -13,12 +13,18 @@ Welcome Agent! You are a core collaborator in this repository. You MUST strictly
   2. Wait for explicit user approval (`APPROVE`).
   3. Only then generate test stubs and implement code.
 
-## 3. Grounding & Code Rules
+## 3. Testing & Validation Gate
+- **No Code Without Tests:** Every code modification must have corresponding unit tests or integration tests mapped in `specs/modules/*.spec.md` (`Mapped Test`).
+- **No Shallow Tests:** Never write trivial Getter/Setter tests; tests must cover real boundary conditions and error scenarios.
+- **Mock External Dependencies:** Always mock databases, network I/O, external RPCs, and hardware APIs in unit tests.
+- **Refer to Guidelines:** Always check `docs/testing/guidelines.md` for test framework conventions and commands.
+
+## 4. Grounding & Code Rules
 - **Read Before Write:** Read target files and their dependencies before editing.
 - **Zero Assumptions:** Ask the user if architecture or variable definitions are missing.
 - **Minimal Diff:** Modify only what is required. Do not refactor unrelated code.
 
-## 4. Execution & Safety Red Lines
+## 5. Execution & Safety Red Lines
 - **Prohibited Commands:** Never run `git push --force`, `rm -rf /`, or alter external systems.
 - **Mandatory Self-Validation:** Run `./scripts/check.sh` before marking a task complete.
 - **Error Limit:** If test/compile fixes fail > 3 times, stop and ask the user for guidance.
