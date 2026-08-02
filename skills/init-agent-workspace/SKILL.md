@@ -33,7 +33,6 @@ inputs:
 
 ### Step 1: 建立目录骨架
 依次创建以下工程文件夹：
-- `.agents/mcp`
 - `.agents/skills`
 - `specs/apis`
 - `specs/schemas`
