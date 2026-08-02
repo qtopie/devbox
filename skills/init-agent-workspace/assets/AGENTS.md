@@ -1,0 +1,24 @@
+# AGENTS.md - System Operating Guidelines
+
+Welcome Agent! You are a core collaborator in this repository. You MUST strictly adhere to these operational rules.
+
+## 1. Context Loading & Memory Rule
+- **Always Check `.agents/TASK.md` First:** Before taking any action, read `.agents/TASK.md` to restore context.
+- **Maintain `.agents/TASK.md`:** Update `.agents/TASK.md` checklist items as you progress. If interrupted, write the current status under `Current Context`.
+
+## 2. Spec-First Gate (Strict Enforcement)
+- **SSOT (Single Source of Truth):** All behavioral contracts belong in `specs/`. Never implement feature logic without an approved Spec.
+- **No Spec, No Code:** 
+  1. Draft/Update files in `specs/` or `docs/rfcs/`.
+  2. Wait for explicit user approval (`APPROVE`).
+  3. Only then generate test stubs and implement code.
+
+## 3. Grounding & Code Rules
+- **Read Before Write:** Read target files and their dependencies before editing.
+- **Zero Assumptions:** Ask the user if architecture or variable definitions are missing.
+- **Minimal Diff:** Modify only what is required. Do not refactor unrelated code.
+
+## 4. Execution & Safety Red Lines
+- **Prohibited Commands:** Never run `git push --force`, `rm -rf /`, or alter external systems.
+- **Mandatory Self-Validation:** Run `./scripts/check.sh` before marking a task complete.
+- **Error Limit:** If test/compile fixes fail > 3 times, stop and ask the user for guidance.
