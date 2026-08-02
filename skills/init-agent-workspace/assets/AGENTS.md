@@ -11,13 +11,14 @@ Welcome Agent! You are a core collaborator in this repository. You MUST strictly
 - **No Spec, No Code:** 
   1. Draft/Update files in `specs/` or `docs/rfcs/`.
   2. Wait for explicit user approval (`APPROVE`).
-  3. Only then generate test stubs and implement code.
+  3. Generate or update test harness fixtures (`harness/`) and test stubs (`testings/`).
+  4. Only then implement business logic code.
 
-## 3. Testing & Validation Gate
-- **No Code Without Tests:** Every code modification must have corresponding unit tests or integration tests mapped in `specs/modules/*.spec.md` (`Mapped Test`).
+## 3. Harness Engineering & Testing Gate
+- **Harness-Driven Development:** Maintain fixtures, mocks, and runners in `harness/`.
+- **Structured Diagnostic Feedback:** When tests fail, read the `Harness Failure Report` automatically written to `.agents/TASK.md` to perform targeted fixes instead of guessing logs.
 - **No Shallow Tests:** Never write trivial Getter/Setter tests; tests must cover real boundary conditions and error scenarios.
-- **Mock External Dependencies:** Always mock databases, network I/O, external RPCs, and hardware APIs in unit tests.
-- **Refer to Guidelines:** Always check `docs/testing/guidelines.md` for test framework conventions and commands.
+- **Mock External Dependencies:** Always mock databases, network I/O, external RPCs, and hardware APIs in unit tests and harness mocks (`harness/mocks/`).
 
 ## 4. Grounding & Code Rules
 - **Read Before Write:** Read target files and their dependencies before editing.
@@ -26,5 +27,5 @@ Welcome Agent! You are a core collaborator in this repository. You MUST strictly
 
 ## 5. Execution & Safety Red Lines
 - **Prohibited Commands:** Never run `git push --force`, `rm -rf /`, or alter external systems.
-- **Mandatory Self-Validation:** Run `./scripts/check.sh` before marking a task complete.
+- **Mandatory Self-Validation:** Run `./scripts/check.sh` (or `./scripts/check-harness.sh`) before marking a task complete.
 - **Error Limit:** If test/compile fixes fail > 3 times, stop and ask the user for guidance.

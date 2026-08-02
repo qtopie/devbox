@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app-sandbox:
+    image: alpine:latest
+    container_name: harness-sandbox
+    working_dir: /workspace
+    volumes:
+      - ../:/workspace
+    environment:
+      - HARNESS_ENV=test
+    command: sh -c "./scripts/check-harness.sh"
