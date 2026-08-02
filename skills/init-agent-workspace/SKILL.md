@@ -8,6 +8,9 @@ inputs:
   primary_language:
     type: string
     description: "主要编程语言 (例如: Go, TypeScript, Java, Rust)"
+  sandbox_type:
+    type: string
+    description: "可选。Harness 沙盒运行模式 (如: local-shell, docker-compose, devcontainer, kind-k8s)。若未指定，初始化时须与用户交互确认。"
 ---
 
 # Skill: Init Agent Workspace (with Harness Engineering)
@@ -22,7 +25,7 @@ inputs:
 - **对 LLM**: 注入 `AGENTS.md` 规则总控、Harness 闭环门禁及语言规范。
 - **对 Planning**: 提供确定性的脚手架搭建步骤（Step 1 ~ Step 6）及 `.agents/TASK.md` 动态进度看板管理（带 Harness 诊断日志节点）。
 - **对 Memory**: 提供结构化的上下文模版、设计契约（`specs/`、`rfcs/`、`bugs/`）与 `harness/` 夹具存根。
-- **对 Tools & Sandbox**: 部署 `harness/docker-compose.yml` 沙盒环境与 `./scripts/check-harness.sh` 自动化测试评估管线。
+- **对 Tools & Sandbox**: 部署交互确定的 Harness 沙盒隔离环境与 `./scripts/check-harness.sh` 自动化测试评估管线。
 
 ---
 
@@ -62,10 +65,16 @@ inputs:
 1. 将本 Skill 的 `assets/TASK.md` 复制为项目 `.agents/TASK.md`（带 Harness 诊断反馈区）。
 2. 将本 Skill 的 `assets/AGENTS.md` 复制为项目根目录 `AGENTS.md`（Agent 核心总控、Spec 门禁及 Harness 测试门禁）。
 
-### Step 4: 部署工程模版、测试指南与 Harness 夹具
-按如下映射关系，将本 Skill `assets/` 目录中的模版部署至目标项目：
+### Step 4: 交互确认 Harness 沙盒模式并部署工程模版
+> ⚠️ **强制交互确认：** 在部署 `harness/` 基础设施前， Agent **必须先询问用户**拟采用的 Harness 沙盒/测试隔离模式：
+> 1. **Local Shell Test Rig** (默认轻量 Shell 脚本运行环境)
+> 2. **Docker Compose** (容器化测试沙盒)
+> 3. **Devcontainer / Nix / Devenv** (轻量声明式开发容器)
+> 4. **Kind / Local Kubernetes** (本地 K8s 集群测试环境)
+
+确认后按映射关系部署模版至目标项目：
+- 根据用户选择生成对应的 `harness/` 环境配置文件（如选择 Docker Compose 则从 `assets/harness/docker-compose.yml` 部署；若选择 Local Shell 则部署 `assets/harness/harness.env`）。
 - `assets/specs/template.spec.md` ➔ `specs/modules/template.spec.md` (包含 `Mapped Test` 断言映射模板)
-- `assets/harness/docker-compose.yml` ➔ `harness/docker-compose.yml`
 - `assets/harness/runners/spec_runner.sh` ➔ `harness/runners/spec_runner.sh`
 - `assets/harness/mocks/README.md` ➔ `harness/mocks/README.md`
 - `assets/docs/harness-engineering.md` ➔ `docs/testing/harness-engineering.md`
@@ -85,7 +94,7 @@ inputs:
 
 ### Step 6: 确认与汇报
 列出所有已成功初始化的目录与文件，并向用户汇报：
-> “初始化完成！基于 SDD 与 Harness Engineering (沙盒/夹具/诊断反馈) 的 AI-Native 项目架构已建立。请在 `docs/system-design.md` 和 `docs/testing/harness-engineering.md` 中补充具体项目的技术细节。”
+> “初始化完成！基于 SDD 与 Harness Engineering (沙盒模式: `{{sandbox_type}}`) 的 AI-Native 项目架构已建立。请在 `docs/system-design.md` 和 `docs/testing/harness-engineering.md` 中补充具体项目的技术细节。”
 
 ---
 
@@ -95,11 +104,11 @@ inputs:
 [1. 需求与方案]
   └── 撰写 RFC ➔ 编写/更新 specs/ (契约与场景断言)
 
-[2. 夹具准备 (Harness Eng)]
-  └── 根据 spec 自动生成或更新 harness/ 下的 Mock & Fixtures ➔ 获得测试断言脚本
+[2. 夹具与沙盒确认 (Harness Eng)]
+  └── 确认用户 Harness 沙盒模式 ➔ 生成 harness/ Mock & Fixtures ➔ 获得测试断言脚本
 
 [3. 代码实现 (Agent Coding)]
-  └── Agent 在 isolated harness 环境中编写业务逻辑
+  └── Agent 在确认的 isolated harness 沙盒环境中编写业务逻辑
 
 [4. 自动校验与诊断 (Harness Feedback)]
   └── Harness 运行断言 ➔ 成功则通过 ➔ 失败则生成 Diagnostic Report 回传给 .agents/TASK.md
@@ -113,8 +122,9 @@ inputs:
 ## 规则与红线 (Rules & Guardrails)
 
 1. **Spec-First Gate**: 遵循 Single Source of Truth (SSOT)，无 Sign-off 的 Spec 前严禁直接编写业务逻辑代码。
-2. **Harness & Testing Gate**: 必须通过 Harness 夹具与沙盒测试校验，严禁硬编码外部依赖，外部 I/O 必须 Mock。
-3. **Structured Telemetry**: 校验失败时优先读取 `.agents/TASK.md` 中的 Harness Failure Report 进行精准修复。
-4. **Dynamic Checkpoint**: 任何开发任务启动时必须更新 `.agents/TASK.md`，保障中断后可随时恢复上下文。
-5. **Mandatory Self-Validation**: 代码变更完成后，必须运行 `./scripts/check.sh` (或 `./scripts/check-harness.sh`) 确保测试通过。
-6. **Safety First**: 禁止强推 `git push --force` 或破坏性清除文件命令。
+2. **Interactive Sandbox Confirmation**: 必须向用户确认 Harness 沙盒隔离方式，切勿擅自假定或硬编码特定容器引擎。
+3. **Harness & Testing Gate**: 必须通过 Harness 夹具与沙盒测试校验，严禁硬编码外部依赖，外部 I/O 必须 Mock。
+4. **Structured Telemetry**: 校验失败时优先读取 `.agents/TASK.md` 中的 Harness Failure Report 进行精准修复。
+5. **Dynamic Checkpoint**: 任何开发任务启动时必须更新 `.agents/TASK.md`，保障中断后可随时恢复上下文。
+6. **Mandatory Self-Validation**: 代码变更完成后，必须运行 `./scripts/check.sh` (或 `./scripts/check-harness.sh`) 确保测试通过。
+7. **Safety First**: 禁止强推 `git push --force` 或破坏性清除文件命令。
