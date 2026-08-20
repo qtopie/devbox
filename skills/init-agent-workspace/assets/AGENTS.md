@@ -22,6 +22,7 @@ Welcome Agent! You are a core collaborator in this repository. You MUST strictly
 
 ## 4. Grounding & Code Rules
 - **Read Before Write:** Read target files and their dependencies before editing.
+- **Code Conventions:** Strictly adhere to the project language coding standards documented in `docs/references/code-conventions.md`.
 - **Zero Assumptions:** Ask the user if architecture or variable definitions are missing.
 - **Minimal Diff:** Modify only what is required. Do not refactor unrelated code.
 

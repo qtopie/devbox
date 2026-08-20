@@ -72,22 +72,28 @@ inputs:
 > 3. **Devcontainer / Nix / Devenv** (轻量声明式开发容器)
 > 4. **Kind / Local Kubernetes** (本地 K8s 集群测试环境)
 
-确认后按映射关系部署模版至目标项目：
+确认后按映射关系部署模版与参考规范至目标项目：
 - 根据用户选择生成对应的 `harness/` 环境配置文件（如选择 Docker Compose 则从 `assets/harness/docker-compose.yml` 部署；若选择 Local Shell 则部署 `assets/harness/harness.env`）。
 - `assets/specs/template.spec.md` ➔ `specs/modules/template.spec.md` (包含 `Mapped Test` 断言映射模板)
 - `assets/harness/runners/spec_runner.sh` ➔ `harness/runners/spec_runner.sh`
 - `assets/harness/mocks/README.md` ➔ `harness/mocks/README.md`
-- `assets/docs/harness-engineering.md` ➔ `docs/testing/harness-engineering.md`
-- `assets/docs/testing-guidelines.md` ➔ `docs/testing/guidelines.md` (替换 `{{primary_language}}`)
 - `assets/docs/rfc.template.md` ➔ `docs/rfcs/template.md`
 - `assets/docs/bug.template.md` ➔ `docs/bugs/template.md`
-- `assets/docs/code-conventions.md` ➔ `docs/references/code-conventions.md` (替换 `{{primary_language}}`)
-- `assets/docs/system-design.md` ➔ `docs/system-design.md`
-- `assets/docs/project-layout.md` ➔ `docs/project-layout.md`
+- `references/harness-engineering.md` ➔ `docs/testing/harness-engineering.md`
+- `references/testing-guidelines.md` ➔ `docs/testing/guidelines.md` (替换 `{{primary_language}}`)
+- **语言规范与代码标准 (`code-conventions.md`)**：
+  - 若为 **Go 语言工程**（`primary_language` 为 `Go` 或工作区存在 `go.mod`/`*.go` 文件）：
+    部署 `references/code-conventions-go.md` ➔ `docs/references/code-conventions.md`（完整集成 Effective Go 规范、自动化工具命令、Package 组织架构及 300~800 行非强制文件规模建议）。
+  - 若为 **React / TypeScript 工程**（`primary_language` 为 `React`/`TypeScript` 或工作区存在 `package.json`/`tsconfig.json`/`*.tsx` 文件）：
+    部署 `references/code-conventions-react.md` ➔ `docs/references/code-conventions.md`（集成 React 18+/19+ Hooks 准则、TypeScript 严格类型、组件与 Feature 架构、JSX 最佳实践及 150~350 行文件建议）。
+  - 其他语言：部署 `references/code-conventions.md` ➔ `docs/references/code-conventions.md`（替换 `{{primary_language}}`）。
+- `references/system-design.md` ➔ `docs/system-design.md`
+- `references/project-layout.md` ➔ `docs/project-layout.md`
 
 ### Step 5: 部署 Harness 校验工具链
 1. 将本 Skill `scripts/` 目录下的 `check.sh`、`check-harness.sh` 与 `check-spec-drift.sh` 复制至项目的 `scripts/` 目录。
-2. 为脚本赋予可执行权限：
+2. 若为 Go 工程，确保 `scripts/check.sh` 包含 Go 自动化检查链（`gofmt -s`, `go vet ./...`, `golangci-lint run`, `go test -race ./...`）；若为 React/TS 工程，确保包含（`tsc --noEmit`, `eslint`, `test`）。
+3. 为脚本赋予可执行权限：
    ```bash
    chmod +x scripts/check.sh scripts/check-harness.sh scripts/check-spec-drift.sh
    ```
